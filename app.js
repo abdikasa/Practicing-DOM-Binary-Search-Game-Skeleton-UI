@@ -7,7 +7,8 @@ let remaining = document.getElementById("time_left");
 let buttonStart;
 let start = document.querySelector(".btn-begin");
 let timeLeft = 5;
-
+let container = document.querySelector(".container");
+container.style.display="none";
 //let minScore = document.querySelector(".min-num");
 //let maxScore = document.querySelector(".max-num");
 //let numOfGuesses = Math.floor(((Number(minScore.textContent)) + Number(maxScore.textContent)) / 2)
