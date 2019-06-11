@@ -8,17 +8,21 @@ let buttonStart;
 let start = document.querySelector(".btn-begin");
 let timeLeft = 5;
 let container = document.querySelector(".container");
-container.style.display="none";
+let lower = document.querySelector("#lower");
+let upper = document.querySelector("#upper");
+let modal_btn = document.querySelector(".submit-score");
+
 //let minScore = document.querySelector(".min-num");
 //let maxScore = document.querySelector(".max-num");
 //let numOfGuesses = Math.floor(((Number(minScore.textContent)) + Number(maxScore.textContent)) / 2)
 //let guesses = document.querySelector(".numGuesses");
 //guesses.innerHTML = ` ${numOfGuesses} `
-
+let close_icon = document.querySelector(".close-icon");
 let dialogue = document.querySelectorAll(".dialogue > p")
 let demo = document.querySelector(".demo");
 let game = document.getElementById("game");
 let timer = document.querySelector(".timer");
+
 let buttonOn = addButton("start");
 buttonOn.style.display = "none";
 
@@ -29,6 +33,36 @@ buttonOn.style.display = "none";
 //Every second using setInterval function we can display a countdown of 5 seconds.
 
 buttonOn.addEventListener("click", buttonWorks);
+close_icon.addEventListener("click", function () {
+    let modal = document.querySelector(".modal");
+    modal.style.opacity = "0";
+    container.style.opacity = "1";
+})
+
+modal_btn.addEventListener("click", function () {
+    if (checkForEmpty(lower) || checkForEmpty(upper)) {
+        showError("Lower or/and upper limits are blank", "alert")
+    }
+})
+
+function checkForEmpty(input) {
+    if (input.value.length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+function check(lower, upper) {
+    lower.value > upper.value ? swap() : console.log("Let the games begin!")
+}
+
+function swap() {
+    let temp = lower.value;
+    lower = upper.value;
+    upper = temp;
+}
 
 function buttonWorks() {
     buttonOn.disabled = true;
@@ -50,7 +84,7 @@ function buttonWorks() {
 //I added an additional if statement to prevent the iterator/index from exceeding the length of the dialogueBox variable.
 //Lastly, we show  the hidden button.
 
-document.addEventListener("DOMContentLoaded", printText);
+//document.addEventListener("DOMContentLoaded", printText);
 
 function printText() {
     if (iterator < dialogueBox[index].length) {
@@ -67,7 +101,6 @@ function printText() {
             return;
         }
         setTimeout(printText, 20);
-
     }
 }
 
@@ -82,6 +115,62 @@ function addButton(text) {
     return btn;
 }
 
+function clearError() {
+    //Hide results
+    lower.value = "";
+    upper.value = ""
+}
+
+function showError(error, string) {
+    const newDiv = document.createElement("div");
+
+    //Retrieving the parent elements of this newely created div.
+    const modalParent = document.querySelector(".modal-error");
+    const modal_content = document.querySelector(".modal-content");
+
+    //add the bootstrap class name for errors
+    newDiv.className = string;
+    //appending
+    newDiv.appendChild(document.createTextNode(error));
+
+    //To insert a created element between 2 elements like card and heading in this case
+    //parentDOM.insertBefore("our desired element", "the element we want to be followed after")
+    modalParent.insertBefore(newDiv, modal_content);
+    //Set Timeout will get rid of our error div we created within 3000 milliseconds or 3 seconds.
+    window.setTimeout(clearAlerts, 4000);
+}
+
+function clearAlerts() {
+    for (let i = document.querySelectorAll(".alert").length - 1; i >= 0; i--) {
+        document.querySelectorAll(".alert")[i].remove();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //matchRegex(str)
 //Finds period and does something. Old method I used to seperate the DOM variable and split the paragraph into array cells.
@@ -91,3 +180,8 @@ function addButton(text) {
 //         else {}
 // }
 // matchRegex(dialogueBox[0]);
+
+
+
+
+
