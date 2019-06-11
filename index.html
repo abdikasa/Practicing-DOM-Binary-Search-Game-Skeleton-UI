@@ -28,13 +28,16 @@
         </div>
     </div>
     <div class="modal">
-        <div class="modal-content">
-            <div class="close-icon">+</div>
-            <h5>Number Guessing Game</h5>
-            <p>Pick a lower and upper-limit for me to guess.</p>
-            <input type="number" id="" placeholder="lower-limit">
-            <input type="number" id="" placeholder="upper-limit">
-            <button type="submit" class="btn-begin submit-score">Press To Start</button>
+        <div class="modal-error">
+            <div class="modal-content">
+                <div class="close-icon">+</div>
+                <h4>Number Guessing Game</h4>
+                <p>Pick a lower and upper-limit for me to guess.</p>
+                <h6>For time sakes: lower and upper must have a maximum difference of 100.</h6>
+                <input type="number" id="lower" placeholder="lower-limit" required>
+                <input type="number" id="upper" placeholder="upper-limit" required>
+                <button type="submit" class="btn-begin submit-score">Press To Start</button>
+            </div>
         </div>
     </div>
     <script src="app.js"></script>
