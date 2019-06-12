@@ -11,7 +11,7 @@ let container = document.querySelector(".container");
 let lower = document.querySelector("#lower");
 let upper = document.querySelector("#upper");
 let modal_btn = document.querySelector(".submit-score");
-
+let form = document.querySelector("#form-rules");
 //let minScore = document.querySelector(".min-num");
 //let maxScore = document.querySelector(".max-num");
 //let numOfGuesses = Math.floor(((Number(minScore.textContent)) + Number(maxScore.textContent)) / 2)
@@ -36,14 +36,35 @@ buttonOn.addEventListener("click", buttonWorks);
 close_icon.addEventListener("click", function () {
     let modal = document.querySelector(".modal");
     modal.style.opacity = "0";
+    window.setTimeout(function () { modal.style.display = "none" }, 3000)
     container.style.opacity = "1";
 })
 
-modal_btn.addEventListener("click", function () {
-    if (checkForEmpty(lower) || checkForEmpty(upper)) {
-        showError("Lower or/and upper limits are blank", "alert")
+form.addEventListener("submit", function (e) {
+    lower.value = Math.abs((lower.value));
+    upper.value = Math.abs((upper.value));
 
+    if ((checkForEmpty(lower) || checkForEmpty(upper)) || (lower.value === "0" && upper.value === "0")) {
+        showError("Lower or/and upper limits are blank", "alert")
+        clearError();
+        buttonDisabled();
+        //returns 0 for upper and lower due to line 44-45
+    } else if (Number(lower.value) > Number(upper.value)) {
+        check(lower, upper);
+        //use Number otherwise string aka logic error.
+
+    } else if (Number(upper.value) - Number(lower.value) >= 101) {
+        showError("Lower and Upper must have a difference of at most 100", "alert")
+        //use Number otherwise string aka logic error.
+        clearError();
+        buttonDisabled();
+    } else {
+        showError("Inputs are correct, click the 'X' at the top right to begin!", "success")
+        modal_btn.style.display = "none";
+        window.setTimeout(function () { document.querySelector(".success").style.opacity = "0" }, 4000)
     }
+
+    e.preventDefault();
 })
 
 function checkForEmpty(input) {
@@ -56,13 +77,11 @@ function checkForEmpty(input) {
 
 
 function check(lower, upper) {
-    lower.value > upper.value ? swap() : console.log("Let the games begin!")
+    return Math.abs(Number(lower.value)) > Math.abs(Number(upper.value)) ? swap(lower, upper) : console.log("Let the games begin!")
 }
 
-function swap() {
-    let temp = lower.value;
-    lower = upper.value;
-    upper = temp;
+function swap(lower, upper) {
+    [lower.value, upper.value] = [upper.value, lower.value];
 }
 
 function buttonWorks() {
@@ -85,7 +104,7 @@ function buttonWorks() {
 //I added an additional if statement to prevent the iterator/index from exceeding the length of the dialogueBox variable.
 //Lastly, we show  the hidden button.
 
-//document.addEventListener("DOMContentLoaded", printText);
+document.addEventListener("DOMContentLoaded", printText);
 
 function printText() {
     if (iterator < dialogueBox[index].length) {
@@ -138,8 +157,6 @@ function showError(error, string) {
     //parentDOM.insertBefore("our desired element", "the element we want to be followed after")
     modalParent.insertBefore(newDiv, modal_content);
     //Set Timeout will get rid of our error div we created within 3000 milliseconds or 3 seconds.
-    clearError();
-    buttonDisabled();
 }
 
 function clearAlerts() {
