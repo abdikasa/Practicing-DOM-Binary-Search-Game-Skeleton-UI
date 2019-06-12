@@ -13,7 +13,7 @@ html, body {
     top: 50%;
     transform: translate(-48%, -45%);
     opacity: 0;
-    transition: opacity 4s;
+    transition: opacity 3s;
 }
 
 .countdown {
@@ -85,4 +85,23 @@ input[type=number] {
     opacity: 1;
     line-height: 175%;
     transition: opacity 2s;
+}
+
+.success {
+    font-weight: bold;
+    border-radius: 4px 4px 0 0;
+    padding: 20px;
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    font-size: 110%;
+    opacity: 1;
+    line-height: 175%;
+    transition: opacity 2s;
+}
+
+.alert, .success {
+    text-transform: uppercase;
+    min-width: 520px;
+    width: 500px;
 }
