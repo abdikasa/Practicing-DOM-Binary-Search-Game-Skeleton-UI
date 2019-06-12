@@ -42,6 +42,7 @@ close_icon.addEventListener("click", function () {
 modal_btn.addEventListener("click", function () {
     if (checkForEmpty(lower) || checkForEmpty(upper)) {
         showError("Lower or/and upper limits are blank", "alert")
+
     }
 })
 
@@ -137,19 +138,25 @@ function showError(error, string) {
     //parentDOM.insertBefore("our desired element", "the element we want to be followed after")
     modalParent.insertBefore(newDiv, modal_content);
     //Set Timeout will get rid of our error div we created within 3000 milliseconds or 3 seconds.
-    window.setTimeout(clearAlerts, 4000);
+    clearError();
+    buttonDisabled();
 }
 
 function clearAlerts() {
-    for (let i = document.querySelectorAll(".alert").length - 1; i >= 0; i--) {
-        document.querySelectorAll(".alert")[i].remove();
-    }
+    document.querySelector(".alert").style.opacity = "0";
+}
+
+function deleteAlerts() {
+    document.querySelector(".alert").remove();
 }
 
 
-
-
-
+function buttonDisabled() {
+    window.setTimeout(clearAlerts, 3000);
+    window.setTimeout(deleteAlerts, 4000);
+    modal_btn.disabled = true;
+    setTimeout(function () { modal_btn.disabled = false; }, 4000);
+}
 
 
 
