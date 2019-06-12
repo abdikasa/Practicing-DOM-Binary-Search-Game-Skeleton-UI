@@ -84,5 +84,5 @@ input[type=number] {
     font-size: 110%;
     opacity: 1;
     line-height: 175%;
-    /* transition: opacity 2s; */
+    transition: opacity 2s;
 }
