@@ -13,6 +13,7 @@ html, body {
     top: 50%;
     transform: translate(-48%, -45%);
     opacity: 0;
+    display: none;
     transition: opacity 3s;
 }
 
@@ -47,11 +48,18 @@ html, body {
     width: 500px;
     background-color: #fff;
     border-radius: 4px;
-    padding: 30px;
     min-height: 300px;
     position: relative;
     text-transform: capitalize;
     font-weight: bold;
+    padding: 20px;
+    line-height: 3rem;
+    word-spacing: 0.2rem;
+}
+
+.rules-content {
+    padding: 30px 10px 10px 10px;
+    font-size: 1.8rem;
 }
 
 .modal-content>h4 {
@@ -71,8 +79,8 @@ input[type=number] {
     top: 0;
     font-size: 2.5rem;
     transform: rotate(45deg);
-    right: 1.2rem;
-    cursor: pointer;
+    right: -1.5rem;
+    border: 0;
 }
 
 .alert {
@@ -87,6 +95,12 @@ input[type=number] {
     transition: opacity 2s;
 }
 
+.modal_error {
+    width: 500px;
+    min-width: 540px;
+    height: auto;
+}
+
 .success {
     font-weight: bold;
     border-radius: 4px 4px 0 0;
@@ -98,10 +112,4 @@ input[type=number] {
     opacity: 1;
     line-height: 175%;
     transition: opacity 2s;
-}
-
-.alert, .success {
-    text-transform: uppercase;
-    min-width: 520px;
-    width: 500px;
 }
