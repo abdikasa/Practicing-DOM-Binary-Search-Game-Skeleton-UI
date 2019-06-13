@@ -1,7 +1,7 @@
 
 //Set the DOM variables/selectors we'll be using.
 
-let dialogueBox = ["Pick a number between 1 and 10.", "I promise I can guess the number you are thinking of with 5 guesses.", "Next I'll present you a series of questions. Answer them honestly.", "Press the button below to start the game"];
+
 let index = 0; let iterator = 0;
 let remaining = document.getElementById("time_left");
 let buttonStart;
@@ -12,19 +12,17 @@ let lower = document.querySelector("#lower");
 let upper = document.querySelector("#upper");
 let modal_btn = document.querySelector(".submit-score");
 let form = document.querySelector("#form-rules");
-//let minScore = document.querySelector(".min-num");
-//let maxScore = document.querySelector(".max-num");
-//let numOfGuesses = Math.floor(((Number(minScore.textContent)) + Number(maxScore.textContent)) / 2)
-//let guesses = document.querySelector(".numGuesses");
-//guesses.innerHTML = ` ${numOfGuesses} `
 let close_icon = document.querySelector(".close-icon");
+close_icon.disabled = true;
 let dialogue = document.querySelectorAll(".dialogue > p")
 let demo = document.querySelector(".demo");
 let game = document.getElementById("game");
 let timer = document.querySelector(".timer");
-
 let buttonOn = addButton("start");
 buttonOn.style.display = "none";
+let dialogueBox = [
+    `Next I'll present you a series of questions. Answer them honestly.`,
+    `Press the button below to start the game`];
 
 
 // User click button once, game starts
@@ -34,10 +32,17 @@ buttonOn.style.display = "none";
 
 buttonOn.addEventListener("click", buttonWorks);
 close_icon.addEventListener("click", function () {
+    let lowerScore = storeInputs(lower, upper)[0];
+    let upperScore = storeInputs(lower, upper)[1];
+    let average = Math.floor((Math.log2(upperScore - lowerScore+1)));
+    let lowerUpper = `Pick a number between ${lowerScore} and ${upperScore}. I promise I can guess the number you are thinking of with ${average} guesses.`;
+    dialogueBox.unshift(lowerUpper);
     let modal = document.querySelector(".modal");
     modal.style.opacity = "0";
+    container.style.display = "block";
     window.setTimeout(function () { modal.style.display = "none" }, 3000)
     container.style.opacity = "1";
+    window.setTimeout(printText, 2000);
 })
 
 form.addEventListener("submit", function (e) {
@@ -61,11 +66,16 @@ form.addEventListener("submit", function (e) {
     } else {
         showError("Inputs are correct, click the 'X' at the top right to begin!", "success")
         modal_btn.style.display = "none";
-        window.setTimeout(function () { document.querySelector(".success").style.opacity = "0" }, 4000)
+        window.setTimeout(function () { document.querySelector(".success").style.opacity = "0" }, 2000)
+        close_icon.disabled = false;
     }
 
     e.preventDefault();
 })
+
+function storeInputs(input1, input2) {
+    return [input1.value, input2.value];
+}
 
 function checkForEmpty(input) {
     if (input.value.length === 0) {
@@ -104,7 +114,6 @@ function buttonWorks() {
 //I added an additional if statement to prevent the iterator/index from exceeding the length of the dialogueBox variable.
 //Lastly, we show  the hidden button.
 
-document.addEventListener("DOMContentLoaded", printText);
 
 function printText() {
     if (iterator < dialogueBox[index].length) {
@@ -169,10 +178,11 @@ function deleteAlerts() {
 
 
 function buttonDisabled() {
-    window.setTimeout(clearAlerts, 3000);
-    window.setTimeout(deleteAlerts, 4000);
+    window.setTimeout(clearAlerts, 2000);
+    window.setTimeout(deleteAlerts, 3000);
     modal_btn.disabled = true;
-    setTimeout(function () { modal_btn.disabled = false; }, 4000);
+    modal_btn.textContent = "Disabled"
+    setTimeout(function () { modal_btn.disabled = false; modal_btn.textContent = "Press To Start" }, 3000);
 }
 
 
