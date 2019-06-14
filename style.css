@@ -113,3 +113,23 @@ input[type=number] {
     line-height: 175%;
     transition: opacity 2s;
 }
+
+.collection .coll-item {
+    border: 2px solid lightgray;
+    height: 40px;
+    list-style: none;
+    margin-bottom: 3rem;
+    font-size: 2rem;
+}
+
+.coll-item-btn {
+    float: right;
+    background-color: red;
+    color: #fff;
+    margin-left: 1.5rem;
+}
+
+.no-btn {
+    background-color:green;
+}
+
