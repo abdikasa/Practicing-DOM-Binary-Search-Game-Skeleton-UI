@@ -4,7 +4,6 @@
 
 let index = 0; let iterator = 0;
 let remaining = document.getElementById("time_left");
-let buttonStart;
 let start = document.querySelector(".btn-begin");
 let timeLeft = 5;
 let container = document.querySelector(".container");
@@ -13,28 +12,79 @@ let upper = document.querySelector("#upper");
 let modal_btn = document.querySelector(".submit-score");
 let form = document.querySelector("#form-rules");
 let close_icon = document.querySelector(".close-icon");
-close_icon.disabled = true;
 let dialogue = document.querySelectorAll(".dialogue > p")
 let demo = document.querySelector(".demo");
 let game = document.getElementById("game");
 let timer = document.querySelector(".timer");
 let buttonOn = addButton("start");
+let buttonClick = false;
+let maxGuesses = 0;
 buttonOn.style.display = "none";
+close_icon.disabled = true;
 let dialogueBox = [
     `Next I'll present you a series of questions. Answer them honestly.`,
     `Press the button below to start the game`];
-
+let collection = document.querySelector(".collection");
+let gameArray = [0, 0, 0, 0, 0]
+let responsesArray = [0, 0, 0, 0, 0];
 
 // User click button once, game starts
 // Fixed the issue in which the user could click multiple times  and the timer would speed up.
 // Button is disabled, will be set to false when the game ends.
 //Every second using setInterval function we can display a countdown of 5 seconds.
 
-buttonOn.addEventListener("click", buttonWorks);
+buttonOn.addEventListener("click", function () {
+    //buttonWorks();
+    maxGuesses = gameArray[2];
+    responsesArray[0] = gameArray[0]; responsesArray[1] = gameArray[1];
+    responsesArray[2] = calcAverage(responsesArray[0], responsesArray[1])
+    createLi((calcAverage(gameArray[0], gameArray[1])), "no", "yes");
+    gameArray[3]++;
+})
+
+let command = "";
+let universalCount = 1;
+collection.addEventListener("click", function (e) {
+    if (universalCount <= maxGuesses) {
+        if (e.target.textContent.toLowerCase() === "yes") {
+            command = "yes";
+            if (universalCount === maxGuesses) {
+                createFInalLi(responsesArray[2] + 1);
+            } else {
+                addGuess();
+                universalCount++;
+            }
+        } else if (e.target.textContent.toLowerCase() === "no") {
+            if (universalCount === maxGuesses) {
+                createFInalLi(responsesArray[2] - 1);
+            } else {
+                console.log("no");
+                command = "no";
+                addGuess();
+                universalCount++;
+            }
+        }
+    }
+})
+
+
+
+function statement() {
+    return command;
+}
+
+
+
+
+
+
 close_icon.addEventListener("click", function () {
     let lowerScore = storeInputs(lower, upper)[0];
+    gameArray[0] = lowerScore;
     let upperScore = storeInputs(lower, upper)[1];
-    let average = Math.floor((Math.log2(upperScore - lowerScore+1)));
+    gameArray[1] = upperScore;
+    let average = getNumOfGuesses(upperScore - lowerScore);
+    gameArray[2] = average;
     let lowerUpper = `Pick a number between ${lowerScore} and ${upperScore}. I promise I can guess the number you are thinking of with ${average} guesses.`;
     dialogueBox.unshift(lowerUpper);
     let modal = document.querySelector(".modal");
@@ -58,20 +108,95 @@ form.addEventListener("submit", function (e) {
         check(lower, upper);
         //use Number otherwise string aka logic error.
 
-    } else if (Number(upper.value) - Number(lower.value) >= 101) {
-        showError("Lower and Upper must have a difference of at most 100", "alert")
+    } else if (Number(upper.value) - Number(lower.value) >= 1000001) {
+        showError("Lower and Upper must have a difference of at most 1,000,000", "alert")
         //use Number otherwise string aka logic error.
         clearError();
         buttonDisabled();
     } else {
         showError("Inputs are correct, click the 'X' at the top right to begin!", "success")
         modal_btn.style.display = "none";
-        window.setTimeout(function () { document.querySelector(".success").style.opacity = "0" }, 2000)
+        window.setTimeout(function () { document.querySelector(".success").style.opacity = "0" }, 1000)
         close_icon.disabled = false;
     }
 
     e.preventDefault();
 })
+
+//Formula for binary search total amount of guesses
+function getNumOfGuesses(number) {
+    return parseInt((Math.log(number) / Math.log(2)) + 1)
+}
+
+function calcAverage(num1, num2) {
+    return Math.floor((Number(num1) + Number(num2)) / 2);
+}
+
+
+let phrase = `Is your number greater than`;
+
+//1.Create <li> elements to append to the list collection.
+
+function createLi(number, string, string2) {
+    const li = document.createElement("li");
+    li.className = "coll-item"
+    li.innerHTML = `Is your number greater than ${number}?`
+
+    const buttton = createButton(string);
+    li.appendChild(buttton);
+
+    const butttton = createButton(string2);
+    butttton.classList.add("no-btn")
+    li.appendChild(butttton);
+    collection.appendChild(li);
+}
+
+function createButton(string) {
+    const btn = document.createElement("button");
+    btn.className = "coll-item-btn"
+    btn.innerHTML = `${string}`;
+    return btn;
+}
+
+function addGuess() {
+    let stmt = statement();
+    if (stmt === "yes") {
+        responsesArray[0] = responsesArray[2] + 1;
+        createLi((calcAverage(responsesArray[0], responsesArray[1])), "no", "yes");
+    } else if (stmt === "no") {
+        responsesArray[1] = responsesArray[2] - 1;
+        createLi((calcAverage(responsesArray[0], responsesArray[1])), "no", "yes");
+    } else {
+        //do nothing
+    }
+    responsesArray[2] = calcAverage(responsesArray[0], responsesArray[1])
+}
+
+function createFInalLi(number) {
+    const li = document.createElement("li");
+    li.className = "coll-item"
+    li.innerHTML = `Your number that you are thinking of is ${number}!`
+    collection.appendChild(li);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function storeInputs(input1, input2) {
     return [input1.value, input2.value];
@@ -94,19 +219,20 @@ function swap(lower, upper) {
     [lower.value, upper.value] = [upper.value, lower.value];
 }
 
-function buttonWorks() {
-    buttonOn.disabled = true;
-    let gameCount = window.setInterval(function () {
-        if (timeLeft === 0) {
-            window.clearTimeout(gameCount);
-            remaining.style.display = "none";
-            buttonOn.style.display = "none";
-        } else {
-            remaining.innerHTML = `<span class= "countdown"> ${timeLeft}s</span>`;
-            timeLeft--;
-        }
-    }, 1000)
-}
+// function buttonWorks() {
+//     buttonOn.disabled = true;
+//     let gameCount = window.setInterval(function () {
+//         if (timeLeft === 0) {
+//             window.clearTimeout(gameCount);
+//             remaining.style.display = "none";
+//             buttonOn.style.display = "none";
+//         } else {
+//             remaining.innerHTML = `<span class= "countdown"> ${timeLeft}s</span>`;
+//             timeLeft--;
+//         }
+//     }, 1000)
+
+// }
 
 //As DOM is loaded and ready to be used, calls printText function
 //I have an array of text, it will parse through each cell, print each letter, then reset the function and iterate to the next letter.
@@ -119,7 +245,7 @@ function printText() {
     if (iterator < dialogueBox[index].length) {
         dialogue[index].innerHTML += `${dialogueBox[index].charAt(iterator)}`;
         iterator++;
-        setTimeout(printText, 20);
+        setTimeout(printText, 10);
     }
     else {
         dialogue.innerHTML += '<br>';
@@ -129,7 +255,7 @@ function printText() {
             buttonOn.style.display = "block";
             return;
         }
-        setTimeout(printText, 20);
+        setTimeout(printText, 10);
     }
 }
 
@@ -184,38 +310,3 @@ function buttonDisabled() {
     modal_btn.textContent = "Disabled"
     setTimeout(function () { modal_btn.disabled = false; modal_btn.textContent = "Press To Start" }, 3000);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//matchRegex(str)
-//Finds period and does something. Old method I used to seperate the DOM variable and split the paragraph into array cells.
-// function matchRegex(str)
-// {
-//         if(str.match(/[.]/)){}
-//         else {}
-// }
-// matchRegex(dialogueBox[0]);
-
-
-
-
-
