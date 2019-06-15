@@ -48,24 +48,34 @@ collection.addEventListener("click", function (e) {
     if (universalCount <= maxGuesses) {
         if (e.target.textContent.toLowerCase() === "yes") {
             command = "yes";
-            if (universalCount === maxGuesses) {
-                createFInalLi(responsesArray[2] + 1);
+            universalCount++;
+            if (universalCount > maxGuesses) {
+                responsesArray[2] = calcAverage(responsesArray[0], responsesArray[1])
+                responsesArray[0] = responsesArray[2] + 1;
+                if (responsesArray[0] == responsesArray[1]) {
+                    createFInalLi(responsesArray[1]);
+                }
             } else {
                 addGuess();
-                universalCount++;
             }
         } else if (e.target.textContent.toLowerCase() === "no") {
-            if (universalCount === maxGuesses) {
-                createFInalLi(responsesArray[2] - 1);
+            command = "no";
+            universalCount++;
+            if (universalCount > maxGuesses) {
+                responsesArray[2] = calcAverage(responsesArray[0], responsesArray[1])
+                responsesArray[1] = responsesArray[2];
+                if (responsesArray[0] == responsesArray[1]) {
+                    createFInalLi(responsesArray[1]);
+                }
             } else {
-                console.log("no");
-                command = "no";
                 addGuess();
-                universalCount++;
             }
         }
+        console.log(responsesArray)
+        console.log(universalCount, maxGuesses)
     }
 })
+
 
 
 
@@ -140,7 +150,7 @@ let phrase = `Is your number greater than`;
 function createLi(number, string, string2) {
     const li = document.createElement("li");
     li.className = "coll-item"
-    li.innerHTML = `Is your number greater than ${number}?`
+    li.innerHTML = `Is your number greater than ${number} ?`
 
     const buttton = createButton(string);
     li.appendChild(buttton);
@@ -160,16 +170,15 @@ function createButton(string) {
 
 function addGuess() {
     let stmt = statement();
+    responsesArray[2] = calcAverage(responsesArray[0], responsesArray[1])
+
     if (stmt === "yes") {
         responsesArray[0] = responsesArray[2] + 1;
         createLi((calcAverage(responsesArray[0], responsesArray[1])), "no", "yes");
     } else if (stmt === "no") {
-        responsesArray[1] = responsesArray[2] - 1;
+        responsesArray[1] = responsesArray[2];
         createLi((calcAverage(responsesArray[0], responsesArray[1])), "no", "yes");
-    } else {
-        //do nothing
     }
-    responsesArray[2] = calcAverage(responsesArray[0], responsesArray[1])
 }
 
 function createFInalLi(number) {
