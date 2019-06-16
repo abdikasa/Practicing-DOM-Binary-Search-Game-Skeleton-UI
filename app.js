@@ -40,6 +40,7 @@ buttonOn.addEventListener("click", function () {
     responsesArray[2] = calcAverage(responsesArray[0], responsesArray[1])
     createLi((calcAverage(gameArray[0], gameArray[1])), "no", "yes");
     gameArray[3]++;
+    buttonOn.remove();
 })
 
 let command = "";
@@ -109,8 +110,8 @@ form.addEventListener("submit", function (e) {
     lower.value = Math.abs((lower.value));
     upper.value = Math.abs((upper.value));
 
-    if ((checkForEmpty(lower) || checkForEmpty(upper)) || (lower.value === "0" && upper.value === "0")) {
-        showError("Lower or/and upper limits are blank", "alert")
+    if ((checkForEmpty(lower) || checkForEmpty(upper)) || (lower.value === upper.value)) {
+        showError("Lower or/and upper limits are blank or are the same number", "alert")
         clearError();
         buttonDisabled();
         //returns 0 for upper and lower due to line 44-45
@@ -187,23 +188,6 @@ function createFInalLi(number) {
     li.innerHTML = `Your number that you are thinking of is ${number}!`
     collection.appendChild(li);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -313,9 +297,9 @@ function deleteAlerts() {
 
 
 function buttonDisabled() {
-    window.setTimeout(clearAlerts, 2000);
-    window.setTimeout(deleteAlerts, 3000);
+    window.setTimeout(clearAlerts, 3000);
+    window.setTimeout(deleteAlerts, 4000);
     modal_btn.disabled = true;
     modal_btn.textContent = "Disabled"
-    setTimeout(function () { modal_btn.disabled = false; modal_btn.textContent = "Press To Start" }, 3000);
+    setTimeout(function () { modal_btn.disabled = false; modal_btn.textContent = "Press To Start" }, 4000);
 }
